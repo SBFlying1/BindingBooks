@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import forums, forum_post
+from .models import forums, forum_post, forum_comment
 
 
 # remove once base user returning correctly
@@ -21,11 +21,17 @@ def forum_list(request):
 
 def forum_detail(request, forum_id):
     forum = get_object_or_404(forums, pk=forum_id)
-    # shows posts whether base_user exists or not. base user for some reason not working for me.
-    posts = forum_post.objects.all().filter(
-        author__isnull=True
-    ) | forum_post.objects.all().filter(author__isnull=False)
+    posts = forum.posts.all()  # shows only this forums posts
     return render(request, "forums/forum_detail.html", {"forum": forum, "posts": posts})
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(forum_post, pk=post_id)
+    comments = post.comments.all()
+
+    return render(
+        request, "forums/post_detail.html", {"post": post, "comments": comments}
+    )
 
 
 def create_post(request, forum_id):
@@ -35,7 +41,7 @@ def create_post(request, forum_id):
         text = request.POST.get("text")
         author = get_forum_user(request)  # change once base user working correctly
 
-        forum_post.objects.create(author=author, post_text=text)
+        forum_post.objects.create(forum=forum, author=author, post_text=text)
 
         return redirect("forum_detail", forum_id=forum_id)
 
@@ -75,5 +81,22 @@ def create_forum(request):
 
         return redirect("forum_list")  # back to list page
 
-    # GET request: show the empty form
+    # show empty form
     return render(request, "forums/create_forum.html")
+
+
+# comments on individual posts in a given forum
+def create_comment(request, post_id):
+    post = get_object_or_404(forum_post, pk=post_id)
+
+    if request.method == "POST":
+        text = request.POST.get("text")
+
+        # owner can be none for now, dont forget to change
+        author = get_forum_user(request)
+
+        forum_comment.objects.create(post=post, author=author, comment_text=text)
+
+        return redirect("post_detail", post_id=post_id)  # return to forum page
+
+    return redirect("post_detail", post_id=post_id)

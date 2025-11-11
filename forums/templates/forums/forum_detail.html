@@ -1,5 +1,14 @@
 <h1>{{ forum.forum_name }}</h1>
+<p>
+  <a href="{% url 'forum_list' %}">Back to all forums</a>
+</p>
 <p>{{ forum.forum_description }}</p>
+{% if forum.start_date %}
+  <p>Starts: {{ forum.start_date }}</p>
+{% endif %}
+{% if forum.meeting_day and forum.meeting_time %}
+  <p>Discussion time:{{ forum.meeting_day }} at {{ forum.meeting_time }}</p>
+{% endif %}
 
 <a href="{% url 'create_post' forum.forum_id %}">Create a Post</a>
 
@@ -7,11 +16,14 @@
 <ul>
   {% for p in posts %}
     <li>
-      {% if p.author %}
-        {{ p.author.first_name }} {{ p.author.last_name }}:
-      {% else %}
-        Anonymous:
-      {% endif %}
+      <a href="{% url 'post_detail' p.post_id %}">
+        {% if p.author %}
+          {{ p.author.first_name }} {{ p.author.last_name }}:
+        {% else %}
+          Anonymous:
+        {% endif %}view post
+      </a>
+      <br />
       {{ p.post_text }}
     </li>
   {% empty %}

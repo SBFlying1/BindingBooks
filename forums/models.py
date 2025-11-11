@@ -30,18 +30,35 @@ class forums(models.Model):
     def __str__(self):
         owner_name = (
             self.owner.name if self.owner else "Unknown owner"
-        )  # changed so having null owner doesn't give errors
+        )  # changed so having null owner doesn't give errors -sam
         return f"{self.forum_name} (owned by {owner_name})"
 
 
 class forum_post(models.Model):
     post_id = models.AutoField(primary_key=True)
     author = models.ForeignKey(base_user, null=True, on_delete=models.SET_NULL)
+    forum = models.ForeignKey(forums, on_delete=models.CASCADE, related_name="posts")
     post_text = models.TextField(null=True, blank=True)
     post_reactions = models.JSONField(default=list)
 
     def __str__(self):
         author_name = (
             self.author.name if self.author else "Unknown author"
-        )  # changed so having null owner doesnt give errors
+        )  # changed so having null owner doesnt give errors -sam
         return f"{author_name} said: {self.post_text}"
+
+
+class forum_comment(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(
+        forum_post, on_delete=models.CASCADE, related_name="comments"
+    )
+    author = models.ForeignKey(base_user, null=True, on_delete=models.SET_NULL)
+    comment_text = models.TextField(null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        author_name = (
+            self.author.name if self.author else "Unknown author"
+        )  # null owner doesnt give errors -sam
+        return f"Comment by {author_name}"
