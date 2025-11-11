@@ -1,0 +1,42 @@
+<h1>Post Details</h1>
+<p>
+  <a href="{% url 'forum_detail' post.forum.forum_id %}">Back to forum</a> |
+  <a href="{% url 'forum_list' %}">Forums list</a>
+</p>
+
+<h2>
+  {% if post.author %}
+    {{ post.author.first_name }} {{ post.author.last_name }}
+  {% else %}
+    Anonymous
+  {% endif %}
+</h2>
+
+<p>{{ post.post_text }}</p>
+
+<hr />
+
+<h3>Comments</h3>
+<ul>
+  {% for c in comments %}
+    <li>
+      {% if c.author %}
+        {{ c.author.first_name }} {{ c.author.last_name }}:
+      {% else %}
+        Anonymous:
+      {% endif %}
+      {{ c.comment_text }}
+    </li>
+  {% empty %}
+    <li>No comments yet.</li>
+  {% endfor %}
+</ul>
+
+<hr />
+
+<h3>Add a Comment</h3>
+<form action="{% url 'create_comment' post.post_id %}" method="POST">
+  {% csrf_token %}
+  <textarea name="text" rows="3" placeholder="Write your comment..."></textarea>
+  <button type="submit">Submit</button>
+</form>
