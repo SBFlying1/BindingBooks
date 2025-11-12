@@ -129,6 +129,10 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGIN_REDIRECT_URL = "home"        # after successful login
+LOGOUT_REDIRECT_URL = "home"       # after logout
+LOGIN_URL = "accounts:login"       # where @login_required sends users
+
 from decouple import config
 
 HOME_DIR = "http://127.0.0.1:8000/"

@@ -24,4 +24,5 @@ urlpatterns = [
     path("products/", include("products.urls")),
     path("payments/", include("payments.urls", namespace="payments")),
     path("forums/", include("forums.urls")),  # added
+    path("accounts/", include("accounts.urls")),  # added
 ]
