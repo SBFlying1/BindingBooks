@@ -15,3 +15,7 @@ urlpatterns = [
          StripeWebhookView.as_view(),
          name="stripe-webhook")
 ]
+
+
+# base_user.user_id 
+#<int:user_id>/

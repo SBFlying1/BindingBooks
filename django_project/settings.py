@@ -145,6 +145,8 @@ STRIPE_SECRET_KEY = config('stripe_test_api_secret_key', default='')
 
 STRIPE_WEBHOOK_SECRET_KEY = config('stripe_webhook_secret_key', default='')
 
+STRIPE_FAKE_CHECKOUT = config('stripe_fake_checkout',default=True)
+
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51SS2L12LulKl7K5WyksMW2rmoLMNnvzuYCwAheWuEnNLbO1T1NGfVbsx90WBEtFA3SDAOxb7xmSuvc68Jj5wuL0X00TyQCVU8u'
 
 #Crispy Forms

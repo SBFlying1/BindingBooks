@@ -27,12 +27,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from products.models import products
+from accounts.models import base_user
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CreateStripeCheckoutSessionView(View):
     def post(self,request,*args,**kwarfs):
         product = products.objects.get(product_id=self.kwargs["pk"]) #uses the primary key passed in to get the product stuff
+        #user = base_user.objects.get(user_id=self.kwargs["pk"])
         checkout_session = stripe.checkout.Session.create(
             payment_method_types = ["card"],
             line_items=[
@@ -45,7 +47,7 @@ class CreateStripeCheckoutSessionView(View):
                     "quantity":1,
                 }
             ],
-            metadata={"product_id":product.product_id}, #we'll get this later with
+            metadata={"product_id":product.product_id}, #we'll get this later with.            #,"user_id":base_user.user_id
             mode="payment",
             success_url = 'http://127.0.0.1:8000/payments/success/',
             cancel_url = 'http://127.0.0.1:8000/payments/cancel/',
@@ -75,9 +77,16 @@ class StripeWebhookView(View):
             #this is if the signature we send is invalid
             return HttpResponse(status=400)
         
-        if event["type"] == "checkout.session.completed":
+        if event["type"] == "checkout.session.completed" and settings.STRIPE_FAKE_CHECKOUT == 'False':
             print("Payment successful")
-        print("Something happened")
+            session = event["data"]["object"]
+            product_id = session["metadata"]["product_id"]
+            print("Here is the product id")
+            print(product_id)
+            
+        
 
         return HttpResponse(status=200)
+
+
 
