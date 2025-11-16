@@ -6,7 +6,7 @@ app_name = "payments"
 urlpatterns = [
     path("success/",SuccessView.as_view(),name="success"),
     path("cancel/",SuccessView.as_view(),name="cancel"),
-    path("create-checkout-session/<int:pk>/",
+    path("create-checkout-session/<int:pk>/<int:uid>/",
          CreateStripeCheckoutSessionView.as_view(),
          name="create-checkout-session",
          ),

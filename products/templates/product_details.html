@@ -29,10 +29,12 @@
     <p>No images available</p>
   {% endif %}
     <form
-          action="{% url 'payments:create-checkout-session' product.product_id %}"
+          action="{% url 'payments:create-checkout-session' pk=product.product_id uid=base_user.user_id %}"
           method="POST"
         >
           {% csrf_token %}
           <button type="submit" class="btn btn-primary">Checkout</button>
 
+<p>test</p>
+<p>{{ base_user.user_id }}</p>
 </head>

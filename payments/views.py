@@ -24,15 +24,18 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import get_user_model
 
 from products.models import products
+from accounts.models import base_user
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CreateStripeCheckoutSessionView(View):
+
     def post(self,request,*args,**kwarfs):
         product = products.objects.get(product_id=self.kwargs["pk"]) #uses the primary key passed in to get the product stuff
+        base_user = base_user.objects.get(user_id=self.kwargs["uid"])
         checkout_session = stripe.checkout.Session.create(
             payment_method_types = ["card"],
             line_items=[
@@ -52,6 +55,8 @@ class CreateStripeCheckoutSessionView(View):
 
         )
         return redirect(checkout_session.url) #redirects the user to a stripe hosted url that handles all that stuff
+    
+    
     
 
 #this is the view that will get loaded when stripe sends us a payload when it knows whether the 

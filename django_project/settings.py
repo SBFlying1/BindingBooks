@@ -151,3 +151,5 @@ STRIPE_PUBLISHABLE_KEY = 'pk_test_51SS2L12LulKl7K5WyksMW2rmoLMNnvzuYCwAheWuEnNLb
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+#AUTH_USER_MODEL = "yourapp.CustomUser"
+AUTH_USER_MODEL = 'accounts.base_user'
