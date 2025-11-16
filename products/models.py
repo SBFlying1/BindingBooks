@@ -1,6 +1,9 @@
 from django.db import models
 from django.urls import reverse
-from accounts.models import base_user
+#from accounts.models import base_user
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 # Create your models here.
 
 
@@ -24,7 +27,7 @@ class products(models.Model):
 
 class product_review(models.Model):
     post_id = models.AutoField(primary_key=True)
-    author = models.ForeignKey(base_user,null=True,on_delete=models.SET_NULL)
+    author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)
     product_being_reviewed = models.ForeignKey(products,on_delete=models.CASCADE) #this is so if the product is deleted so is the review (theres nothing to review its gone)
     post_text = models.TextField
     post_reactions = models.JSONField(default=list)
