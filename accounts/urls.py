@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 from . import views
 
 app_name = "accounts"
@@ -28,9 +29,10 @@ urlpatterns = [
 
     # Password change (for logged-in users)
     path(
-        "password_change/",
+        "change_password/",
         auth_views.PasswordChangeView.as_view(
-            template_name="registration/password_change_form.html"
+            template_name="registration/change_password.html",
+            success_url = reverse_lazy("accounts:password_change_done")
         ),
         name="password_change",
     ),

@@ -136,6 +136,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "home"        # after successful login
 LOGOUT_REDIRECT_URL = "home"       # after logout
 LOGIN_URL = "accounts:login"       # where @login_required sends users
+PASSWORD_CHANGE_REDIRECT_URL = 'accounts:password_change_done'
+
 
 from decouple import config
 
