@@ -29,7 +29,7 @@ class product_review(models.Model):
     post_id = models.AutoField(primary_key=True)
     author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)
     product_being_reviewed = models.ForeignKey(products,on_delete=models.CASCADE) #this is so if the product is deleted so is the review (theres nothing to review its gone)
-    post_text = models.TextField
+    post_text = models.TextField(blank=True, default="")
     post_reactions = models.JSONField(default=list)
     #star_5_rating = models.IntegerChoices() #! NEED TO DO LATER, OR FIND SOME METHOD THAT DOES THIS 
 
