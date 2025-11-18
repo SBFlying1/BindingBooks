@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Products | BindingBooks{% endblock title %}
+
+{% block content %}
+<div class="py-4">
+    <h1 class="mb-4">Products</h1>
+    {% if products %}
+    <div class="list-group">
+        {% for product in products %}
+        <a href="{% url 'product_details' product.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">{{ product.product_name }}</h5>
+                <p class="mb-1 text-muted">{{ product.product_description|default:"No description yet." }}</p>
+            </div>
+            <span class="fw-bold">${{ product.product_price|floatformat:2 }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">No products available yet.</p>
+    {% endif %}
+</div>
+{% endblock content %}
+
