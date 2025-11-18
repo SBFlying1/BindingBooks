@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.models import products  # your model is named 'products'
+from products.models import products
 import requests
 import random
 
