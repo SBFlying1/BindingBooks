@@ -1,17 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import forums, forum_post, forum_comment
-
-
-# remove once base user returning correctly
-def get_forum_user(request):
-    if not request.user.is_authenticated:
-        return None
-
-    try:
-        # If base_user exists for this Django user
-        return request.user.base_user
-    except:
-        return None
+from django.contrib.auth.decorators import login_required
 
 
 def forum_list(request):
@@ -33,21 +22,50 @@ def post_detail(request, post_id):
         request, "forums/post_detail.html", {"post": post, "comments": comments}
     )
 
+from django.core.validators import ValidationError
+from django.http import HttpResponse
 
+@login_required
 def create_post(request, forum_id):
     forum = get_object_or_404(forums, pk=forum_id)
+    
 
     if request.method == "POST":
-        text = request.POST.get("text")
-        author = get_forum_user(request)  # change once base user working correctly
+        text = request.POST.get("text") #gets text from the html 
+        author = request.user  # gets current user
+        new_post = forum_post(forum=forum, author=author, post_text=text)
 
-        forum_post.objects.create(forum=forum, author=author, post_text=text)
+    #__________form validation__________#
+        #we first try and clean/valid the post, if it fails, takes you back to making a new form ideal with all the old info already there
+        try: 
+            new_post.full_clean()
+            new_post.save()
+            print("we did not find a bad word and have sent the data to the database")
+            return redirect("forum_detail", forum_id=forum_id)
+        except ValidationError as ve:
+            print("ERROR ERROR WE FOUND A BAD WORD")
+                #!MAKE IT SO IT TRYS TO RESUBMIT THE FORM, USE THE FOLLOWING WEBSTIE:
+                #https://forum.djangoproject.com/t/form-validationerror-not-showing-in-form/33363
+            context = {'text': text}
+            #return HttpResponse('')
+            return render(request,
+                        "forums/create_post.html",
+                        context={"forum": forum,'text_entry': text} #{"forum": forum, "post_text":text}
+                        )  # Pass the form with errors
+                #TODO
+                #TODO
+                #TODO
+                #TODO
+        #new_post.save()
+        #___________________________________#
+        #print("we did not find a bad word and have sent the data to the database")
+        #return redirect("forum_detail", forum_id=forum_id)
+    elif request.method == "GET":
+        #!add here contex for if we send a string maybe
+        return render(request, "forums/create_post.html", {"forum": forum})
 
-        return redirect("forum_detail", forum_id=forum_id)
 
-    return render(request, "forums/create_post.html", {"forum": forum})
-
-
+@login_required
 def create_forum(request):
     if request.method == "POST":
         # get fields from post
@@ -58,9 +76,7 @@ def create_forum(request):
         meeting_day = request.POST.get("meeting_day")
         meeting_time = request.POST.get("meeting_time")
 
-        owner = get_forum_user(
-            request
-        )  # change once base user working correctly/i figure out what im doin wrong
+        forum_lead = request.user  # changed to forum lead for clarity
 
         # Convert comma-separated tags into a list
         try:
@@ -73,10 +89,10 @@ def create_forum(request):
             forum_name=name,
             forum_description=description,
             forum_tags=tag_list,
-            owner=owner,  # owner can be none for now!!! dont forget to change
-            start_date=start_date or None,
-            meeting_day=meeting_day or None,
-            meeting_time=meeting_time or None,
+            forum_lead=forum_lead,
+            start_date=start_date,
+            meeting_day=meeting_day,
+            meeting_time=meeting_time,
         )
 
         return redirect("forum_list")  # back to list page
@@ -85,7 +101,7 @@ def create_forum(request):
     return render(request, "forums/create_forum.html")
 
 
-# comments on individual posts in a given forum
+@login_required
 def create_comment(request, post_id):
     post = get_object_or_404(forum_post, pk=post_id)
 
@@ -93,7 +109,7 @@ def create_comment(request, post_id):
         text = request.POST.get("text")
 
         # owner can be none for now, dont forget to change
-        author = get_forum_user(request)
+        author = request.user
 
         forum_comment.objects.create(post=post, author=author, comment_text=text)
 

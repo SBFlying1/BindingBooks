@@ -1,38 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.product_name }} | BindingBooks{% endblock title %}
+
+{% block content %}
 <head>
-
-  <h1>{{ product.product_name }}</h1>
-  <p>{{ product.product_description}}</p>
-  <p>Price: {{ product.product_price }}</p>
-
-  
-  #Display product tags
-
-
-  {% if product.product_tags %}
-        <h2>Tags:</h2>
-    {% for tags in product.product_tags %}
-        <p1> {{tags}} </p1>
-    {% endfor %}
-  {% else %}
-    <p>No tags</p>
-  {% endif %}
-
-  #Display product images
-
-  {% if product.product_images %}
-    {% for image_url in product.product_images %}
-        <img src="{{ image_url }}" alt="{{ product.product_title }}" class="product-image">
-    {% endfor %}
-  {% else %}
-    <p>No images available</p>
-  {% endif %}
-    <form
-          action="{% url 'payments:create-checkout-session' product.product_id %}"
-          method="POST"
-        >
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary">Checkout</button>
-
+  <script src="{% static 'products/verified.js' %}" defer></script>
 </head>
+<body>
+{{ jsinfo|json_script:"django-data" }}
+<article class="py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <h1 class="mb-1">{{ product.product_name }}</h1>
+      <p class="text-muted mb-0">Price: ${{ product.product_price|floatformat:2 }}</p>
+    </div>
+    <form action="{% url 'payments:create-checkout-session' product.product_id %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary" id='checkoutbutton'>Checkout</button>
+    </form>
+  </div>
+
+  <p>{{ product.product_description }}</p>
+
+  <section class="mt-4">
+    <h2 class="h5">Tags</h2>
+    {% if product.product_tags %}
+      <div>
+        {% for tag in product.product_tags %}
+          <span class="badge text-bg-secondary me-1 mb-1">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No tags</p>
+    {% endif %}
+  </section>
+
+  <section class="mt-4">
+    <h2 class="h5">Images</h2>
+    {% if product.product_images %}
+      <div class="row g-3">
+        {% for image_url in product.product_images %}
+          <div class="col-6 col-md-4 col-lg-3">
+            <img src="{{ image_url }}" alt="{{ product.product_name }}" class="img-fluid rounded">
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No images available</p>
+    {% endif %}
+  </section>
+
+  <section class="mt-5">
+    <h2 class="h5 mb-3">Reviews</h2>
+    {% if reviews %}
+      <div class="list-group">
+        {% for review in reviews %}
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between mb-2">
+              <h6 class="mb-1">
+                {% if review.author %}
+                  {{ review.author.username }}
+                {% else %}
+                  Anonymous
+                {% endif %}
+              </h6>
+            </div>
+            <p class="mb-1">{{ review.post_text }}</p>
+            {% if review.post_reactions %}
+              <small class="text-muted">
+                Reactions: 
+                {% for reaction in review.post_reactions %}
+                  <span class="badge text-bg-secondary me-1">{{ reaction }}</span>
+                {% endfor %}
+              </small>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+    {% endif %}
+  </section>
+</article>
+</body>
+
+{% endblock content %}
+
+
