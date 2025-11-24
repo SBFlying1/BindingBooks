@@ -12,6 +12,7 @@
     is_active: true
     first_name: "bilbo"
     last_name: "baggins"
+    favorite_genre: "fantasy"
     user_bio: "there and back again aint got shit on my story"
     user_owned_books: []
 
