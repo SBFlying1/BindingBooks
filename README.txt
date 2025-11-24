@@ -32,15 +32,20 @@ also for like billing info you dont have to bother putting anything really, like
 5 digit billing number
 
 
+to use fake stripe checkout need 
+stripe_fake_checkout=True (this can be changed to False if needed but only really me(Noah) would need to use that for now)
 
 stripe commands:
 
 stripe logs tail          <--this displays api messages post/gets that stripe gets
 stripe listen --forward-to {insert the url for the webhooks view}
 
-
+stripe listen --forward-to localhost:8000/payments/webhooks/stripe/
 
 
 
 https://onetimesecret.com/en/
 to be used for sharing secret key
+
+
+pip install model-bakery

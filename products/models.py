@@ -1,7 +1,9 @@
 from django.db import models
 from django.urls import reverse
-from accounts.models import base_user
-# Create your models here.
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
 
 
 class products(models.Model):
@@ -18,15 +20,15 @@ class products(models.Model):
     def __str__(self):
         return f"{self.product_name} for: ${self.product_price}"
     
-    def get_absolute_url(self):  #! TO BE IMPLEMENTED LATER (when links have been made and stuff)
+    def get_absolute_url(self):  
         return reverse("product_details",kwargs={"product_id":self.product_id})
 
 
 class product_review(models.Model):
     post_id = models.AutoField(primary_key=True)
-    author = models.ForeignKey(base_user,null=True,on_delete=models.SET_NULL)
+    author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)
     product_being_reviewed = models.ForeignKey(products,on_delete=models.CASCADE) #this is so if the product is deleted so is the review (theres nothing to review its gone)
-    post_text = models.TextField
+    post_text = models.TextField(blank=True, default="")
     post_reactions = models.JSONField(default=list)
     #star_5_rating = models.IntegerChoices() #! NEED TO DO LATER, OR FIND SOME METHOD THAT DOES THIS 
 

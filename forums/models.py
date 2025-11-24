@@ -1,16 +1,19 @@
 from django.db import models
-from accounts.models import base_user
+
+from django.contrib.auth import get_user_model
+from general.validators import Validators
+User = get_user_model()
 
 
 class forums(models.Model):
     forum_id = models.AutoField(primary_key=True)
     forum_name = models.TextField(null=False)
-    forum_description = models.TextField()
-    owner = models.ForeignKey(
-        base_user, null=True, on_delete=models.SET_NULL
-    )  # this is so if the owner is deleted, the owner here is simply set to null
+    forum_description = models.TextField(validators=[Validators.is_any_word_in_text_profanity])
+    forum_lead = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL
+    )  # changed to forum lead for clarity
     forum_tags = models.JSONField(default=list)
-    start_date = models.DateField(null=True, blank=True)
+    start_date = models.DateField()
     meeting_day = models.CharField(
         max_length=10,
         choices=[
@@ -22,30 +25,30 @@ class forums(models.Model):
             ("Sat", "Saturday"),
             ("Sun", "Sunday"),
         ],
-        null=True,
-        blank=True,
+        blank=False,
     )
-    meeting_time = models.TimeField(null=True, blank=True)
+    meeting_time = models.TimeField()
+
+    
 
     def __str__(self):
-        owner_name = (
-            self.owner.name if self.owner else "Unknown owner"
-        )  # changed so having null owner doesn't give errors -sam
-        return f"{self.forum_name} (owned by {owner_name})"
+        forum_lead_name = (
+            self.forum_lead.username if self.forum_lead else "Unknown forum lead"
+        )
+        return f"{self.forum_name} (led by {forum_lead_name})"
 
-
+import csv
 class forum_post(models.Model):
     post_id = models.AutoField(primary_key=True)
-    author = models.ForeignKey(base_user, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     forum = models.ForeignKey(forums, on_delete=models.CASCADE, related_name="posts")
-    post_text = models.TextField(null=True, blank=True)
-    post_reactions = models.JSONField(default=list)
+    post_text = models.TextField(null=True, blank=True,validators=[Validators.is_any_word_in_text_profanity])
+    post_reactions = models.JSONField(default=list,blank=True)
 
     def __str__(self):
-        author_name = (
-            self.author.name if self.author else "Unknown author"
-        )  # changed so having null owner doesnt give errors -sam
+        author_name = self.author.username if self.author else "Unknown author"
         return f"{author_name} said: {self.post_text}"
+    
 
 
 class forum_comment(models.Model):
@@ -53,12 +56,12 @@ class forum_comment(models.Model):
     post = models.ForeignKey(
         forum_post, on_delete=models.CASCADE, related_name="comments"
     )
-    author = models.ForeignKey(base_user, null=True, on_delete=models.SET_NULL)
-    comment_text = models.TextField(null=False)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    comment_text = models.TextField(null=False,validators=[Validators.is_any_word_in_text_profanity])
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         author_name = (
-            self.author.name if self.author else "Unknown author"
+            self.author.username if self.author else "Unknown author"
         )  # null owner doesnt give errors -sam
         return f"Comment by {author_name}"
