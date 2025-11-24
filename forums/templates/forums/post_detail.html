@@ -1,29 +1,37 @@
-<h1>Post Details</h1>
-<p>
-  <a href="{% url 'forum_detail' post.forum.forum_id %}">Back to forum</a> |
-  <a href="{% url 'forum_list' %}">Forums list</a>
-</p>
+{% extends 'base.html' %}
+{% block title %}
+  {{ forum.forum_name }} Post Details | BindingBooks
+{% endblock %}
 
-<h2>{{ post.author.username|default:'Unknown author' }}</h2>
+{% block content %}
+  <body>
+    <p>
+      <a href="{% url 'forum_detail' post.forum.forum_id %}">Back to forum</a> |
+      <a href="{% url 'forum_list' %}">Forums list</a>
+    </p>
 
-<p>{{ post.post_text }}</p>
+    <h2>{{ post.author.username|default:'Unknown author' }}</h2>
 
-<hr />
+    <p>{{ post.post_text }}</p>
 
-<h3>Comments</h3>
-<ul>
-  {% for c in comments %}
-    <li>{{ c.author.username|default:'Unknown author' }}: {{ c.comment_text }}</li>
-  {% empty %}
-    <li>No comments yet.</li>
-  {% endfor %}
-</ul>
+    <hr />
 
-<hr />
+    <h3>Comments</h3>
+    <ul>
+      {% for c in comments %}
+        <li>{{ c.author.username|default:'Unknown author' }}: {{ c.comment_text }}</li>
+      {% empty %}
+        <li>No comments yet.</li>
+      {% endfor %}
+    </ul>
 
-<h3>Add a Comment</h3>
-<form action="{% url 'create_comment' post.post_id %}" method="POST">
-  {% csrf_token %}
-  <textarea name="text" rows="3" placeholder="Write your comment..."></textarea>
-  <button type="submit">Submit</button>
-</form>
+    <hr />
+
+    <h3>Add a Comment</h3>
+    <form action="{% url 'create_comment' post.post_id %}" method="POST">
+      {% csrf_token %}
+      <textarea name="text" rows="3" placeholder="Write your comment..."></textarea>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+{% endblock %}

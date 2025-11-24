@@ -1,23 +1,31 @@
-<h1>{{ forum.forum_name }}</h1>
-<p>
-  <a href="{% url 'forum_list' %}">Back to all forums</a>
-</p>
-<p>{{ forum.forum_description }}</p>
-<p>Starts: {{ forum.start_date }}</p>
-<p>Discussion time: {{ forum.meeting_day }} at {{ forum.meeting_time }}</p>
-<p>Forum lead: {{ forum.forum_lead.username|default:'Unknown owner' }}</p>
+{% extends 'base.html' %}
+{% block title %}
+  {{ forum.forum_name }}| BindingBooks
+{% endblock %}
 
-<a href="{% url 'create_post' forum.forum_id %}">Create a Post</a>
+{% block content %}
+  <body>
+    <p>
+      <a href="{% url 'forum_list' %}">Back to all forums</a>
+    </p>
+    <p>{{ forum.forum_description }}</p>
+    <p>Starts: {{ forum.start_date }}</p>
+    <p>Discussion time: {{ forum.meeting_day }} at {{ forum.meeting_time }}</p>
+    <p>Forum lead: {{ forum.forum_lead.username|default:'Unknown owner' }}</p>
 
-<h2>Posts</h2>
-<ul>
-  {% for p in posts %}
-    <li>
-      <a href="{% url 'post_detail' p.post_id %}">{{ p.author.username|default:'Unknown author' }}: view post</a>
-      <br />
-      {{ p.post_text }}
-    </li>
-  {% empty %}
-    <li>No posts yet.</li>
-  {% endfor %}
-</ul>
+    <a href="{% url 'create_post' forum.forum_id %}">Create a Post</a>
+
+    <h2>Posts</h2>
+    <ul>
+      {% for p in posts %}
+        <li>
+          <a href="{% url 'post_detail' p.post_id %}">{{ p.author.username|default:'Unknown author' }}: view post</a>
+          <br />
+          {{ p.post_text }}
+        </li>
+      {% empty %}
+        <li>No posts yet.</li>
+      {% endfor %}
+    </ul>
+  </body>
+{% endblock %}
