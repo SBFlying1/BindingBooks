@@ -25,6 +25,7 @@
   <p><strong>First name:</strong> {{ request.user.first_name }}</p>
   <p><strong>Last name:</strong> {{ request.user.last_name }}</p>
   <p><strong>Favorite Genre:</strong> {{ request.user.favorite_genre|title }}</p>
+  <p><strong>Favorite Authors:</strong> {{ request.user.favorite_authors|join:", " }}</p>
 
   <p><strong>Bio:</strong><br>
     {{ request.user.user_bio|linebreaks }}
