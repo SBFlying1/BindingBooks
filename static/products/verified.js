@@ -5,7 +5,9 @@ let dataFromDjango
 document.addEventListener('DOMContentLoaded', function() {
         const djangoDataElement = document.getElementById('django-data');
         if (djangoDataElement) {
-            dataFromDjango = JSON.parse(djangoDataElement.textContent);            
+            dataFromDjango = JSON.parse(djangoDataElement.textContent);
+            console.log("here is one part of it");
+            console.log(dataFromDjango.product_id);         
             console.log("js got the data");
             console.log(dataFromDjango);
         }

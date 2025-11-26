@@ -1,0 +1,12 @@
+Product Detail
+    Get product from database
+    check if there is a user
+        check if the user owns this book
+    pass data to tempalte
+
+
+
+
+tempalte
+    If user does own book   
+        dont show button

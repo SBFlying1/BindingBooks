@@ -1,16 +1,18 @@
 import csv
 from django.core.validators import ValidationError
 from django.utils.translation import gettext_lazy as _
+print("csv.__version__")
+print(csv.__version__)
 
 class Validators():
     #\\\\\\\\\\\\\\
     #note that some methods are have the static tag because for form validators 
     #django cant handle it having a 'self' arg, so we have to make sure it doesnt have that
     #\\\\\\\\\\\\\\
-
+    
     translation_table = dict.fromkeys(map(ord, '!,.'), None) 
     with open('static/profanity-list.txt') as f:
-            reader = csv.reader(f, delimiter="\n")
+            reader = csv.reader(f, delimiter='\n')
             bad_word_list = sum(list(reader),[])
              #this is because it imports the file as a list of 1 element lists like this: [['word'],['word']]
             #and that flattens it out
@@ -23,7 +25,7 @@ class Validators():
     def is_word_profanity(value):
         translation_table = dict.fromkeys(map(ord, '!,.'), None) 
         with open('static/profanity-list.txt') as f:
-            reader = csv.reader(f, delimiter="\n")
+            reader = csv.reader(f, delimiter='\n')
             bad_word_list = sum(list(reader),[])
 
         if value in bad_word_list:
@@ -43,7 +45,7 @@ class Validators():
     def is_any_word_in_text_profanity(value):
         translation_table = dict.fromkeys(map(ord, '!,.'), None) 
         with open('static/profanity-list.txt') as f:
-            reader = csv.reader(f, delimiter="\n")
+            reader = csv.reader(f, delimiter='\n')
             bad_word_list = sum(list(reader),[])
 
 
@@ -63,3 +65,7 @@ class Validators():
                 flagged_words.append(word)
         return flagged_words
     
+
+
+
+
