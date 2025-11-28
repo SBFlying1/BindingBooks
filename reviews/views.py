@@ -38,4 +38,4 @@ def create_review(request):
             trigger_warnings=trigger_warnings,
         )
 
-        return redirect("product_details", product_id=product.product_id)
+        return redirect("product_details", pk=product.product_id)
