@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-User = get_user_model()
+#from django.contrib.auth import get_user_model
+#User = get_user_model()
 
 
 
@@ -27,7 +27,7 @@ class products(models.Model):
         # empty list for reviews
         return list(self.product_review_set.all())
 
-
+'''
 class product_review(models.Model):
     post_id = models.AutoField(primary_key=True)
     author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)
@@ -38,3 +38,4 @@ class product_review(models.Model):
 
     def __str__(self):
         return f"{self.author.name} said this: {self.post_text}"
+    '''
