@@ -6,8 +6,8 @@
 {% block extra_nav %}
   <ul class="navbar-nav">
     {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_post' forum.forum_id %}">+ Create New Post in {{ forum.forum_name }}</a>
+      <li class="nav-item px-lg-4">
+        <a class="nav-link text-uppercase" href="{% url 'create_post' forum.forum_id %}">+ Create New Post in {{ forum.forum_name }}</a>
       </li>
     {% endif %}
   </ul>

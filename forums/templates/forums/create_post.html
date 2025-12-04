@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-  Create a Post in {{ forum.forum_name }} | BindingBooks
-{% endblock %}
 {% block extra_nav %}
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'forum_detail' forum.forum_id %}">Back to {{ forum.forum_name }}</a>
+  <li class="nav-item px-lg-4">
+    <a class="nav-link text-uppercase" href="{% url 'forum_detail' forum.forum_id %}">Back to {{ forum.forum_name }}</a>
   </li>
 {% endblock %}
 {% block content %}
-  <link rel="stylesheet" href="{% static 'forums/forums.css' %}" />
   {% include 'includes/product_sidebar.html' with forum=forum %}
   <form method="POST">
     {% csrf_token %}

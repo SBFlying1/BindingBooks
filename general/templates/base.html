@@ -19,7 +19,7 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'dark-mode.css' %}" />
         <link rel="stylesheet" href="{% static 'forums/forums.css' %}" />
-        <link rel="stylesheet" href="../../static/general/styles.css" />
+        <link rel="stylesheet" href="{% static 'general/styles.css' %}" />
     </head>
     <body>
         <header>
@@ -50,6 +50,9 @@
                         {% if request.user.is_superuser %}
                           <a href="{% url 'moderation_queue' %}" class='nav-link px-2'>Moderation Queue</a>
                         {% endif %}
+                        {% block extra_nav %}
+
+                        {% endblock %}
                     </ul>
                 </div>
             </div>
