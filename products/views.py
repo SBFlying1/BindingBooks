@@ -5,6 +5,8 @@ from general.models import Tag
 import json
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 User = get_user_model()
 
 class ProductListView(ListView):
@@ -67,3 +69,18 @@ class ProductDetailView(DetailView):
 
         context['display_book'] = display_book
         return context
+    
+
+@login_required
+def toggle_favorite(request, pk):
+    """Add or remove a product from the user's favorites."""
+    
+    product = get_object_or_404(products, pk=pk)
+
+    # If the user already favorited it → remove it  
+    if product in request.user.favorite_books.all():
+        request.user.favorite_books.remove(product)
+    else:
+        request.user.favorite_books.add(product)
+
+    return redirect(request.META.get("HTTP_REFERER", "products:product_list"))
