@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.product_name }} | BindingBooks{% endblock title %}
+
+{% block content %}
+
+
+
+
+
+
+<body>
+    <div class="container rounded book-title">
+        <h1 class="text-center">{{ product.product_name }}</h1>
+    </div>
+
+{% if display_book == True%}
+<!-- container-md rounded bg-light  -->
+<div id="main-text-container" class="overflow-scroll">
+
+    <p class="text-break">{{ text }}</p>
+
+</div>
+
+
+
+{% else %}
+  <!-- this is where whatever display you want for telling the user that they see the book because they dont own it -->
+   <p>You dont own this book, purchase it to read it!</p>
+   <form action="{% url 'products' product.product_id %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Buy Here</button>
+    </form>
+{% endif %}
+
+<p>{{ text }}</p>
+</body>
+
+{% endblock content %}
